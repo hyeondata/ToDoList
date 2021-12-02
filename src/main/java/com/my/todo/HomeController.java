@@ -1,8 +1,11 @@
 package com.my.todo;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -65,7 +68,7 @@ public class HomeController {
 	
 		
 		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
-		DataSource ds = ac.getBean(DataSource.class);
+		
 		DB _db = ac.getBean(DB.class);
 	
 		_name =_db.Login(request.getParameter("id"),request.getParameter("pw"));
@@ -86,7 +89,7 @@ public class HomeController {
 	
 		
 		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
-		DataSource ds = ac.getBean(DataSource.class);
+		
 		DB _db = ac.getBean(DB.class);
 		
 		System.out.println(_db.Register(request.getParameter("id"), request.getParameter("pw"), request.getParameter("name")));
@@ -103,5 +106,37 @@ public class HomeController {
 		
 		return "board";
 	}
+	
+	@RequestMapping(value = "/CreateWork", method = RequestMethod.POST)
+	public String CreateWork(HttpServletRequest request)throws Exception{
+	
+		
+		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
+		
+		DB _db = ac.getBean(DB.class);
+		System.out.println(request.getParameter("desc"));
+		System.out.println(_db.CreateWork(request.getParameter("desc"), request.getParameter("date"), _name));
+		System.out.println("¿Ã∏ß : "+ _name);
+		
+		return "redirect:/board";
+	}
+	
+	@RequestMapping(value = "/Do", method = RequestMethod.GET)
+	public String Do(Model model)throws Exception{
+		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
+		
+		DB _db = ac.getBean(DB.class);
+		System.out.println(_db.Do(_name));
+		ArrayList<ArrayList> result = _db.Do(_name);
+		
+		
+		Map<String, ArrayList> map = new HashMap<String, ArrayList>();
 
+		map.put("desc", result.get(0));
+	    map.put("date", result.get(0));
+		
+		model.addAttribute("desc", result.get(0));
+		model.addAttribute("date", result.get(1));
+		return "board";
+	}
 }
