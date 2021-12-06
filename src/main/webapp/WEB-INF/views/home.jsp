@@ -17,6 +17,7 @@
 	<input type="submit" value="로그인">
 	
 </form>
+<a href='<c:url value="/register"/>'>회원가입</a>
 <P>  The time on the server is ${serverTime}. </P>
 </body>
 </html>

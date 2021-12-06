@@ -21,7 +21,8 @@
 			<label>비밀번호</label>
 			<input type="text" name="pw" id="pw"></input>
 		</p>
-		<input type="submit" value="가입 완료">
+		<input type="submit" onclick="alert('가입 완료 되었습니다.')" value="가입 완료">
 	</form>
 </body>
+
 </html>
