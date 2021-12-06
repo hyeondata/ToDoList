@@ -8,27 +8,26 @@
 <title>로그인</title>
 </head>
 <body>
-	<h1>메인</h1>
-
-	<h2>사용자 : ${member}</h2>
 	<div class="_table">
+		<h2 class="_user"> ${member}의 ToDoList</h2>
+
 		<div class="board">
-			<div class="do">
-				<h1>할일</h1>
-			</div>
-			<div class="doing">
-				<h1>하는중</h1>
-			</div>
-			<div class="end">
-				<h1>끝</h1>
-			</div>
-		</div>
-	</div>
-</body>
-<footer>
+		
+			<h1 class="_do _text">할일</h1>
+			<h1 class = "_doing _text">하는중</h1>
+			<h1 class = "_end _text">끝</h1>
+			<div class="do _text"></div>
+			<div class="doing _text"></div>
+			<div class="end _text"></div>
+			<footer>
 	<h1>
 		<a href='<c:url value="/"/>'>로그아웃</a>
 	</h1>
+		</div>
+		
+	</div>
+</body>
+
 </footer>
 <script>
 
@@ -94,7 +93,7 @@ function _Main() {
 										<input type="text" class=desc_in name="desc" placeholder="내용"> <input type="date" class=time_in name="date">
 									</div>
 									<div class="right">
-										<input type="button" class="new_submit" onclick="_new_do()" value="확인"> <input type="button" class="clear" onclick="window.location.reload();" value="취소">
+										<input type="button" class="new_submit" onclick="_new_do()" value="작성"> <input type="button" class="clear" onclick="window.location.reload();" value="취소">
 									</div>
 									</div>`
 					$('.do').append(temp_new);

@@ -1,28 +1,32 @@
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
-	pageEncoding="EUC-KR"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ page language="java" contentType="text/html; charset =utf-8" pageEncoding="utf-8" session="false"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
-<title>х╦©Ь╟║ют</title>
+<link href="<c:url value="/resources/register.css" />" rel="stylesheet">
+
+<title>М ▄Л⌡░Й╟─Л·┘</title>
 </head>
 <body>
-	<h2>х╦©Ь╟║ют</h2>
+<div class = 'main'>
+	<h2>М ▄Л⌡░Й╟─Л·┘</h2>
 	<form action="registerS" method="post">
 		<p>
-			<label>юл╦╖</label>
+			<label> Л²╢К╕└</label>
 			<input type="text" name="name" id="name"></input>
 		</p>
 		<p>
-			<label>╬фюл╣П</label>
+			<label>Л∙└Л²╢К■■</label>
 			<input type="text" name="id" id="id"></input>
 		</p>
 		<p>
-			<label>╨Я╧п╧Ьхё</label>
+			<label>К╧└К╟─К╡┬М≤╦</label>
 			<input type="text" name="pw" id="pw"></input>
 		</p>
-		<input type="submit" onclick="alert('╟║ют ©о╥А ╣г╬З╫ю╢о╢ы.')" value="╟║ют ©о╥А">
+		<input class="login" type="submit" onclick="alert('Й╟─Л·┘ Л≥└Кё▄ К░≤Л≈┬Л┼╣К▀┬К▀╓.')" value="Й╟─Л·┘ Л≥└Кё▄">
+		<a  class="register"href='<c:url value="/"/>'>К▓╓К║°Й╟─Й╦╟</a>
 	</form>
+	</div>
 </body>
 
 </html>

@@ -1,48 +1,70 @@
 h1 {
 	text-align: center;
 }
-footer{
-	float :right;
 
+footer {
+	float: right;
 }
 
-div._table{
-	background: #99cfff;	
-	border-radius: 15px;
-}
-
-div.do {
-	height: 80%; width : 30%;
+h1._text{
+	height: 10%;
+	width: 28%;
 	float: left;
 	box-sizing: border-box;
-	background: #0ff;
+	background: #66b5ff;
+	border-radius: 20px;
 	overflow: auto;
-	width: 30%;
 }
+div._text{
+	height:80%;
+	width: 28%;
+	float: left;
+	box-sizing: border-box;
+	background: #66b5ff;
+
+	overflow: auto;
+}
+
+
+h1._doing {
+
+	margin-left: 8%;
+	margin-right: 8%;
+
+}
+
+h2._user {
+	padding-top: 5%;
+	padding-left: 5%;
+}
+
+div._table {
+	margin: 3%;
+	
+	background : #e6f3ff;
+	border-radius: 50px;
+	background: #e6f3ff;
+	
+}
+
+div.board {
+	display: inline-block;
+	width: 80%; padding : 10%;
+	padding: 10%;
+	padding-top: 0%;
+}
+
+
 
 div.doing {
-	height: 80%;
-	width: 30%;
-	margin-left: 5%;
-	margin-right: 5%;
-	float: left;
-	box-sizing: border-box;
-	background: #0ff;
-	overflow: auto;
+	margin-left: 8%;
+	margin-right: 8%;
+
 }
 
 div.end {
 	height: 80%;
-	width: 30%;
-	float: left;
-	box-sizing: border-box;
-	background: #0ff;
-	overflow: auto;
-}
 
-div.board {
-	padding-left: 5%;
-	padding-right: 5%;
 }
 
 div.new_box {
@@ -53,12 +75,13 @@ div.new_box {
 	margin-right: 10%;
 	width: 80%;
 	height: 15%;
-	border: 1px solid #000
+	border: 1px solid white;
 }
 
 div.left {
 	float: left;
-	height: 100%; width : 65%;
+	height: 100%;
+	width: 65%;
 	box-sizing: border-box;
 	width: 65%;
 }
@@ -72,24 +95,28 @@ div.right {
 input.desc_in {
 	height: 60%;
 	width: 100%;
+	background-color: #e6f3ff;
 	box-sizing: border-box;
 }
 
 input.time_in {
 	height: 40%;
 	width: 100%;
+	background-color: #e6f3ff;
 	box-sizing: border-box;
 }
 
 input.new_submit {
 	height: 50%;
 	box-sizing: border-box;
+	background-color: #e6f3ff;
 	width: 100%;
 }
 
 input.clear {
 	height: 50%;
 	box-sizing: border-box;
+	background-color: #e6f3ff;
 	width: 100%
 }
 
@@ -114,11 +141,13 @@ div.time {
 input.submit {
 	height: 50%;
 	box-sizing: border-box;
+	background-color: #99ccff;
 	width: 100%;
 }
 
 input.cancel {
 	height: 50%;
 	box-sizing: border-box;
+	background-color: #99ccff;
 	width: 100%
 }
