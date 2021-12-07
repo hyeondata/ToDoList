@@ -57,16 +57,6 @@ public class HomeController {
 	public String home(Locale locale, Model model)throws Exception{
 	//	logger.info("Welcome home! The client locale is {}.", locale);
 		_name = null;
-				
-		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-
-		model.addAttribute("serverTime", formattedDate);
-		
-		
 		
 
 
@@ -74,15 +64,31 @@ public class HomeController {
 	}
 	
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
-	public String Login(HttpServletRequest request)throws Exception{
-	
-		
+	public String Login(HttpServletRequest request, HttpServletResponse response)throws Exception{
+
+		response.setContentType("text/html; charset=UTF-8");
+		 
+		PrintWriter out = response.getWriter();
+		 
+
+
+
+
+
 		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
 		
 		DB _db = ac.getBean(DB.class);
 	
 		_name =_db.Login(request.getParameter("id"),request.getParameter("pw"));
 		System.out.println("이름 : "+ _name);
+		
+		
+		if (_name == null) {
+			out.println("<script>alert('일치하는 계정이 없습니다.');</script>");
+			out.flush();
+			
+			return "home";
+		}
 		
 		return "redirect:/board";
 	}
@@ -104,7 +110,7 @@ public class HomeController {
 		
 		System.out.println(_db.Register(request.getParameter("id"), request.getParameter("pw"), request.getParameter("name")));
 
-		return "home";
+		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/board", method = RequestMethod.GET)

@@ -2,30 +2,58 @@ package com.my.todo;
 
 
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import org.springframework.core.env.Environment;
+
+
 @Configuration
+@PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 public class DBConfig {
-
-	private static  String DRIVER = "com.mysql.jdbc.Driver"; //Connection을 구현한 클래스의 이름
-	private static  String URL = "JDBC:MYSQL://localhost:3306/todolist?useSSL=false"; //mysql 서버 주소
-	private static  String USER = "root"; //계정
-	private static  String PW = "1234567890"; // 비밀번호
-
+/*
+	@Value("${db.driver}")
+	private String DRIVER;
 	
-	@Bean
+	@Value("{db.URL}")
+	private String URL;
+	
+	@Value("{db.USER}")
+	private String USER;
+	
+	@Value("{db.PW}")
+	private String PW;
+	
+		@Bean
 	public DataSource DataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
         dataSource.setDriverClassName(DRIVER);
         dataSource.setUrl(URL);
         dataSource.setUsername(USER);
         dataSource.setPassword(PW);
+        return dataSource;
+	}	
+*/
+	@Autowired
+	Environment env;
+	
+	@Bean
+	public DataSource DataSource() {
+		BasicDataSource dataSource = new BasicDataSource();
+        dataSource.setDriverClassName(env.getProperty("db.DRIVER"));
+        dataSource.setUrl(env.getProperty("db.URL"));
+        dataSource.setUsername(env.getProperty("db.USER"));
+        dataSource.setPassword(env.getProperty("db.PW"));
         return dataSource;
 	}	
 }

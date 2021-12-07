@@ -42,7 +42,7 @@ function _submit(click_id) {
 	$.ajax({
         type:'post',
         async:false, 
-        url:'http://localhost:8080/todo/submit',
+        url:"<c:url value="/submit"/>",
         dataType:'text',
         data:{_id : click_id},
         success: function(data) {
@@ -61,7 +61,7 @@ function _cancel(click_id) {
 	$.ajax({
         type:'post',
         async:false, 
-        url:'http://localhost:8080/todo/cancle',
+        url:"<c:url value="/cancle"/>",
         dataType:'text',
         data:{_id : click_id},
         success: function(data) {
@@ -153,7 +153,7 @@ function _Main() {
         $.ajax({
             type:'post',
             async:false, 
-            url:'http://localhost:8080/todo/CreateWork',
+            url:"<c:url value="/CreateWork"/>",
             dataType:'text',
             data:{desc:desc_in, date:time_in},
             success: function(data) {
