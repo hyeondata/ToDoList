@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 import org.slf4j.Logger;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mysql.cj.api.Session;
 
 import java.util.List;
 
@@ -37,59 +40,56 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
-import com.my.todo.DB;
-
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
 public class HomeController {
-
+	
+	@Autowired
+	MemberService memberService;
+	
+	private Member User = new Member();
 //	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	public static String _name = null;
-	
-	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model)throws Exception{
-	//	logger.info("Welcome home! The client locale is {}.", locale);
-		_name = null;
-		
 
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String home(Locale locale, Model model, HttpServletRequest request)throws Exception{
+	//	logger.info("Welcome home! The client locale is {}.", locale);
+		HttpSession session = request.getSession();
+		session.setAttribute("Login", "False");
 
 		return "home";
 	}
 	
 	@RequestMapping(value = "/Login", method = RequestMethod.POST)
 	public String Login(HttpServletRequest request, HttpServletResponse response)throws Exception{
-
+		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
 		 
 		PrintWriter out = response.getWriter();
-		 
-
-
-
-
-
-		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
 		
-		DB _db = ac.getBean(DB.class);
-	
-		_name =_db.Login(request.getParameter("id"),request.getParameter("pw"));
-		System.out.println("이름 : "+ _name);
+		System.out.println(session.getAttribute("Login"));
+		
+		User.setId(request.getParameter("id"));
+		User.setPw(request.getParameter("pw"));
+		User.setName(memberService.DBDao.Login(User));
+
 		
 		
-		if (_name == null) {
+		if (User.getName() == null) {
 			out.println("<script>alert('일치하는 계정이 없습니다.');</script>");
 			out.flush();
 			
+			session.setAttribute("Login", "False");
+			
 			return "home";
 		}
-		
+		session.setAttribute("Login", "True");
 		return "redirect:/board";
 	}
 	
@@ -103,22 +103,30 @@ public class HomeController {
 	@RequestMapping(value = "/registerS", method = RequestMethod.POST)
 	public String RegisterS(HttpServletRequest request)throws Exception{
 	
-		
-		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
-		
-		DB _db = ac.getBean(DB.class);
-		
-		System.out.println(_db.Register(request.getParameter("id"), request.getParameter("pw"), request.getParameter("name")));
+		Member member = new Member();
+		member.setId(request.getParameter("id"));
+		member.setPw(request.getParameter("pw"));
+		member.setName(request.getParameter("name"));
+		memberService.DBDao.memberInsert(member);
 
 		return "redirect:/";
 	}
 	
 	@RequestMapping(value = "/board", method = RequestMethod.GET)
-	public String board(Locale locale, Model model)throws Exception{
-				
-		System.out.println("메인:"+ _name);
+	public String board(HttpServletRequest request,Locale locale, Model model, HttpServletResponse response)throws Exception{
+		HttpSession session = request.getSession();
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter out = response.getWriter();
+		String login = (String)session.getAttribute("Login");
+		System.out.println(login);
+		if (login.equals("False")) {
+			out.println("<script>alert('로그인 해주세요.');</script>");
+			out.flush();
+			return "home";
+		}
+		System.out.println("메인:"+ User.getName());
 
-		model.addAttribute("member", _name );
+		model.addAttribute("member", User.getName() );
 		
 		return "board";
 	}
@@ -127,12 +135,9 @@ public class HomeController {
 	public String CreateWork(HttpServletRequest request)throws Exception{
 	
 		
-		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
+		memberService.DBDao.CreateWork(request.getParameter("desc"),request.getParameter("date"),User);
 		
-		DB _db = ac.getBean(DB.class);
-		System.out.println(request.getParameter("desc"));
-		System.out.println(_db.CreateWork(request.getParameter("desc"), request.getParameter("date"), _name));
-		System.out.println("이름 : "+ _name);
+		System.out.println("이름 : "+ User.getName());
 		
 		return "redirect:/board";
 	}
@@ -141,12 +146,7 @@ public class HomeController {
 	public String Submit(HttpServletRequest request)throws Exception{
 	
 		
-		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
-		
-		DB _db = ac.getBean(DB.class);
-		System.out.println(request.getParameter("_id"));
-		System.out.println(_db.Submit(request.getParameter("_id")));
-		System.out.println("이름 : "+ _name);
+		memberService.DBDao.Submit(request.getParameter("_id"));
 		
 		return "redirect:/board";
 	}
@@ -155,12 +155,8 @@ public class HomeController {
 	public String Cancle(HttpServletRequest request)throws Exception{
 	
 		
-		ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
-		
-		DB _db = ac.getBean(DB.class);
-		System.out.println(request.getParameter("_id"));
-		System.out.println(_db.Cancel(request.getParameter("_id")));
-		System.out.println("이름 : "+ _name);
+		memberService.DBDao.Cancel(request.getParameter("_id"));
+
 		
 		return "redirect:/board";
 	}
@@ -171,18 +167,33 @@ public class HomeController {
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public HashMap<String, ArrayList<ArrayList>> init(@RequestBody HashMap<String, ArrayList<ArrayList>> map) throws Exception  {
     	
-    	ApplicationContext ac = new AnnotationConfigApplicationContext(DBConfig.class,DB.class);
+    	List<Board> result  = memberService.DBDao.board(User);
+    	ArrayList<String> desc = new ArrayList<String>();
+    	ArrayList<String> date = new ArrayList<String>();
+    	ArrayList<String> id = new ArrayList<String>();
+    	ArrayList<Integer> status = new ArrayList<Integer>();
+    	
+    	ArrayList<ArrayList> _Data = new ArrayList<ArrayList>();
+    	
+    	for(int i = 0 ; i<result.size();i++) {
+    		desc.add(result.get(i).getDesc());
+    		date.add(result.get(i).getDate());
+    		id.add(result.get(i).getid());
+    		
+    		status.add(result.get(i).getstatus());
+    		
+    		}
+    	_Data.add(desc);
+    	_Data.add(date);
+    	_Data.add(id);
+    	_Data.add(status);
+    	System.out.println(_Data);
+    	
+		map.put("desc", _Data.get(0));
+		map.put("date", _Data.get(1));
+		map.put("id", _Data.get(2));
+		map.put("status", _Data.get(3));
 		
-		DB _db = ac.getBean(DB.class);
-	//	System.out.println(_db.Do(_name));
-		
-		ArrayList<ArrayList> result = _db.Do(_name);
-
-		 map.put("desc", result.get(0));
-		 map.put("date", result.get(1));
-		 map.put("id", result.get(2));
-		 map.put("status",result.get(3));
-		 System.out.println(result.get(3));
         return map;
 
     }
