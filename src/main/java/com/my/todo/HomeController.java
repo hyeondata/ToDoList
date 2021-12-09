@@ -77,8 +77,8 @@ public class HomeController {
 		
 		User.setId(request.getParameter("id"));
 		User.setPw(request.getParameter("pw"));
-		User.setName(memberService.DBDao.Login(User));
-
+		User.setNum(memberService.MemberDao.Login(User));
+		User.setName(memberService.MemberDao.Name(User));
 		
 		
 		if (User.getName() == null) {
@@ -107,7 +107,7 @@ public class HomeController {
 		member.setId(request.getParameter("id"));
 		member.setPw(request.getParameter("pw"));
 		member.setName(request.getParameter("name"));
-		memberService.DBDao.memberInsert(member);
+		memberService.MemberDao.memberInsert(member);
 
 		return "redirect:/";
 	}
@@ -135,7 +135,7 @@ public class HomeController {
 	public String CreateWork(HttpServletRequest request)throws Exception{
 	
 		
-		memberService.DBDao.CreateWork(request.getParameter("desc"),request.getParameter("date"),User);
+		memberService.BoardDao.CreateWork(request.getParameter("desc"),request.getParameter("date"),User);
 		
 		System.out.println("¿Ã∏ß : "+ User.getName());
 		
@@ -146,7 +146,7 @@ public class HomeController {
 	public String Submit(HttpServletRequest request)throws Exception{
 	
 		
-		memberService.DBDao.Submit(request.getParameter("_id"));
+		memberService.BoardDao.Submit(request.getParameter("_id"));
 		
 		return "redirect:/board";
 	}
@@ -155,7 +155,7 @@ public class HomeController {
 	public String Cancle(HttpServletRequest request)throws Exception{
 	
 		
-		memberService.DBDao.Cancel(request.getParameter("_id"));
+		memberService.BoardDao.Cancel(request.getParameter("_id"));
 
 		
 		return "redirect:/board";
@@ -167,10 +167,10 @@ public class HomeController {
     @RequestMapping(value = "/test", method = RequestMethod.POST)
     public HashMap<String, ArrayList<ArrayList>> init(@RequestBody HashMap<String, ArrayList<ArrayList>> map) throws Exception  {
     	
-    	List<Board> result  = memberService.DBDao.board(User);
+    	List<Board> result  = memberService.BoardDao.board(User);
     	ArrayList<String> desc = new ArrayList<String>();
     	ArrayList<String> date = new ArrayList<String>();
-    	ArrayList<String> id = new ArrayList<String>();
+    	ArrayList<Integer> id = new ArrayList<Integer>();
     	ArrayList<Integer> status = new ArrayList<Integer>();
     	
     	ArrayList<ArrayList> _Data = new ArrayList<ArrayList>();

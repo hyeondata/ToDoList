@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 	
 	@Autowired
-	DBDao DBDao;
+	MemberDao MemberDao;
 	
+	@Autowired
+	BoardDao BoardDao;
 
 	
 	

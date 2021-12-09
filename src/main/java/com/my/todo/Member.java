@@ -11,6 +11,16 @@ public class Member {
 	private String Id;
 	private String pw;
 	private String name;
+	private int Num;
+	
+	public void setNum(int num) {
+		this.Num = num;
+	}
+	
+	public Integer getNum() {
+		return Num;
+	}
+	
 	
 	public String getId() {
 		return Id;

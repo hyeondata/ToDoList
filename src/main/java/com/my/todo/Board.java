@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public class Board {
 	private String _Desc;
 	private String _Date;
-	private String _id;
+	private Integer _id;
 	private Integer _status;
 	
 	
@@ -19,7 +19,7 @@ public class Board {
 	public String getDate(){
 		return _Date;
 	}
-	public String getid(){
+	public Integer getid(){
 		return _id;
 	}
 	public Integer getstatus(){
@@ -35,7 +35,7 @@ public class Board {
 		this._Date = _date;
 	}
 	
-	public void setid(String _id) {
+	public void setid(Integer _id) {
 		this._id = _id;
 	}
 	

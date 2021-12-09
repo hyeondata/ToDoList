@@ -2,62 +2,25 @@ package com.my.todo;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
 @Repository
-public class DBDao {
+public class BoardDao {
 
 	@Autowired
 	JdbcTemplate db;
 
 	@Autowired
-	Member member;
-	
-	@Autowired
 	Board board;
 
+	public List<Board> board(Member member) { // rs.getInt 오류??
 
-	public void memberInsert(Member member) {
-		String sql = "INSERT INTO member(_id,_pw,_name) VALUES (?,?,?)";
-		db.update(sql, member.getId(), member.getPw(), member.getName());
-		// TODO Auto-generated method stub
-	}
-
-	public String Login(Member member) {
-		String sql = "select _name from member where _id = ? and _pw = ? ;";
-		List<String> result = db.query(sql, new RowMapper<String>() {
-			@Override
-			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
-				String name = rs.getString("_name");
-				// TODO Auto-generated method stub
-				return name ;
-			}
-			
-		},member.getId(),member.getPw());
-		
-		if (result.size() == 0)
-			return null;
-		else
-			return result.get(0); 
-	}
-	
-	public void CreateWork(String Desc , String Date, Member member) {
-		String sql = "INSERT INTO description(_Desc,_Date,_Desc_ID) VALUES (?,?,?); ";
-		db.update(sql, Desc, Date, member.getName());
-	}
-	
-	public List<Board> board(Member member) {		//rs.getInt 오류??
-		
-		String sql ="select DISTINCT _Desc, _Date, _id, status from description WHERE _Desc_ID = ?";
+		String sql = "select DISTINCT _Desc, _Date, _id, status from description WHERE MemberID = ?";
 		List<Board> result = db.query(sql, new RowMapper<Board>() {
 			@Override
 			public Board mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -66,17 +29,17 @@ public class DBDao {
 				board.setstatus(rs.getInt("status"));
 				board.setDesc(rs.getString("_Desc"));
 				board.setDate(rs.getString("_Date"));
-				board.setid(rs.getString("_id"));
-		
-				return board ;
+				board.setid(rs.getInt("_id"));
+
+				return board;
 			}
-			
-		},member.getName());
+
+		}, member.getNum());
 
 		return result;
-		
+
 	}
-	
+
 	public void Submit(String _id) {
 		String sql = "select status from description where _id = ?;";
 		List<Integer> result = db.query(sql, new RowMapper<Integer>() {
@@ -84,19 +47,18 @@ public class DBDao {
 			public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Integer name = rs.getInt("status");
 				// TODO Auto-generated method stub
-				return name ;
+				return name;
 			}
-			
-		},_id);
+
+		}, _id);
 		int _status = result.get(0);
 		if (_status < 3) {
 			_status++;
 		}
 		String sql1 = "UPDATE description SET status = ? where _id = ?";
-		db.update(sql1,_status,_id);
+		db.update(sql1, _status, _id);
 	}
-	
-	
+
 	public void Cancel(String _id) {
 		String sql = "select status from description where _id = ?;";
 		List<Integer> result = db.query(sql, new RowMapper<Integer>() {
@@ -104,19 +66,25 @@ public class DBDao {
 			public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
 				Integer name = rs.getInt("status");
 				// TODO Auto-generated method stub
-				return name ;
+				return name;
 			}
-			
-		},_id);
+
+		}, _id);
 		int _status = result.get(0);
 		if (_status > 0) {
 			_status--;
 		}
 		String sql1 = "UPDATE description SET status = ? where _id = ?";
-		db.update(sql1,_status,_id);
-		if(_status == 0 ) {
+		db.update(sql1, _status, _id);
+		if (_status == 0) {
 			String sql2 = "DELETE FROM todolist.description where _id = ?";
-			db.update(sql2,_id);
+			db.update(sql2, _id);
 		}
+	}
+	
+	
+	public void CreateWork(String Desc , String Date, Member member) {
+		String sql = "INSERT INTO description(_Desc,_Date,_Desc_ID,MemberID) VALUES (?,?,?,?); ";
+		db.update(sql, Desc, Date, member.getName(),member.getNum());
 	}
 }
